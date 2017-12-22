@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<None Include="..\..\PolyTerrain.uproject" />
+		<Filter Include="Source">
+			<UniqueIdentifier>{0D931B8D-D4FF-4B95-9C4A-9CB733157ADB}</UniqueIdentifier>
+		</Filter>
+		<None Include="..\..\Source\PolyTerrain.Target.cs">
+			<Filter>Source</Filter>
+		</None >
+		<None Include="..\..\Source\PolyTerrainEditor.Target.cs">
+			<Filter>Source</Filter>
+		</None >
+		<Filter Include="Config">
+			<UniqueIdentifier>{45CCB12C-AF48-4C96-B52F-2AD4CD0E5C36}</UniqueIdentifier>
+		</Filter>
+		<None Include="..\..\Config\DefaultEditor.ini">
+			<Filter>Config</Filter>
+		</None >
+		<None Include="..\..\Config\DefaultEngine.ini">
+			<Filter>Config</Filter>
+		</None >
+		<None Include="..\..\Config\DefaultGame.ini">
+			<Filter>Config</Filter>
+		</None >
+		<Filter Include="Source\PolyTerrain">
+			<UniqueIdentifier>{EEE1A491-EE04-47DA-A8A6-E5EA36CD228D}</UniqueIdentifier>
+		</Filter>
+		<None Include="..\..\Source\PolyTerrain\PolyTerrain.Build.cs">
+			<Filter>Source\PolyTerrain</Filter>
+		</None >
+		<ClCompile Include="..\..\Source\PolyTerrain\PolyTerrain.cpp">
+			<Filter>Source\PolyTerrain</Filter>
+		</ClCompile >
+		<ClInclude Include="..\..\Source\PolyTerrain\PolyTerrain.h">
+			<Filter>Source\PolyTerrain</Filter>
+		</ClInclude >
+		<ClCompile Include="..\..\Source\PolyTerrain\PolyTerrainGameModeBase.cpp">
+			<Filter>Source\PolyTerrain</Filter>
+		</ClCompile >
+		<ClInclude Include="..\..\Source\PolyTerrain\PolyTerrainGameModeBase.h">
+			<Filter>Source\PolyTerrain</Filter>
+		</ClInclude >
+	</ItemGroup>
+</Project>

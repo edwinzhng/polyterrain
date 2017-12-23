@@ -1,4 +1,5 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Edwin Zhang
+
 using System.IO;
 using UnrealBuildTool;
 

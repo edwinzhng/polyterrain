@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Edwin Zhang
 
 #include "PolyTerrain.h"
 #include "Modules/ModuleManager.h"

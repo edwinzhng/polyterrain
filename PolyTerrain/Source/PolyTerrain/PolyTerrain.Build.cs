@@ -1,23 +1,53 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
+using System.IO;
 using UnrealBuildTool;
 
 public class PolyTerrain : ModuleRules
 {
-	public PolyTerrain(ReadOnlyTargetRules Target) : base(Target)
+    private string ModulePath
+    {
+        get { return Path.GetDirectoryName(RulesCompiler.GetModuleFilename(this.GetType().Name)); }
+    }
+
+    private string LibraryPath
+    {
+        get { return Path.GetFullPath(Path.Combine(ModulePath, "../../Libraries/"));  }
+    }
+
+    public PolyTerrain(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
+        switch (Target.Platform)
+        {
+            // 64-bit Windows
+            case UnrealTargetPlatform.Win64:
+                PublicAdditionalLibraries.Add(Path.Combine(LibraryPath, "accidental-noise-library", "build", "ANL", "x64", "ANL.lib"));
+                break;
 
-		// Uncomment if you are using Slate UI
-		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
-		
-		// Uncomment if you are using online features
-		// PrivateDependencyModuleNames.Add("OnlineSubsystem");
+            // 32-bit Windows
+            case UnrealTargetPlatform.Win32:
+                PublicAdditionalLibraries.Add(Path.Combine(LibraryPath, "accidental-noise-library", "build", "ANL", "x86", "ANL.lib"));
+                break;
 
-		// To include OnlineSubsystemSteam, add it to the plugins section in your uproject file with the Enabled attribute set to true
-	}
+            // Mac
+            case UnrealTargetPlatform.Mac:
+                PublicAdditionalLibraries.Add(Path.Combine(LibraryPath, "accidental-noise-library", "build", "ANL", "Universal", "libANL.a"));
+                break;
+
+            // Linux
+            case UnrealTargetPlatform.Linux:
+                PublicAdditionalLibraries.Add(Path.Combine(LibraryPath, "accidental-noise-library", "build", "ANL", "x64", "libANL.a"));
+                break;
+
+            default:
+                break;
+        }
+
+        PublicIncludePaths.Add(Path.Combine(LibraryPath, "polyvox", "include"));
+        PublicIncludePaths.Add(Path.Combine(LibraryPath, "accidental-noise-library"));
+    }
 }

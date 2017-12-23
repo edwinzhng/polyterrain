@@ -6,12 +6,12 @@ public class PolyTerrain : ModuleRules
 {
     private string ModulePath
     {
-        get { return Path.GetDirectoryName(RulesCompiler.GetModuleFilename(this.GetType().Name)); }
+        get { return ModuleDirectory; ; }
     }
 
     private string LibraryPath
     {
-        get { return Path.GetFullPath(Path.Combine(ModulePath, "../../Libraries/"));  }
+        get { return Path.Combine(ModulePath, "../../Libraries/"); }
     }
 
     public PolyTerrain(ReadOnlyTargetRules Target) : base(Target)

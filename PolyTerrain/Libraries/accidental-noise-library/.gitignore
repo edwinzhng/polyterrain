@@ -1,3 +1,4 @@
-build
+build/*
 *.a
+
 premake5.exe

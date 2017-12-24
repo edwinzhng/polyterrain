@@ -6,7 +6,7 @@ namespace anl
     {
         set(0,0);
     }
-
+		
     CCoordinate::CCoordinate(double x, double y)
     {
         set(x,y);

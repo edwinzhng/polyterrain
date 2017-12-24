@@ -40,7 +40,6 @@ void AVoxelEnvironment::PostInitializeComponents()
 	Super::PostInitializeComponents();
 }
 
-
 // VoxelEnvironmentPager function definitions
 
 // Constructor
@@ -60,20 +59,14 @@ void VoxelEnvironmentPager::pageIn(const PolyVox::Region& region, PagedVolume<Ma
 
 	// Gradient on vertical axis for ground plane
 	auto VerticalGradient = NoiseKernel.divide(NoiseKernel.clamp(NoiseKernel.subtract(VerticalHeight, NoiseKernel.z()), Zero, VerticalHeight), VerticalHeight);
-
-	// Turn gradient into two solids that represent ground and air
 	auto VerticalSelect = NoiseKernel.select(Zero, One, VerticalGradient, NoiseKernel.constant(0.5), Zero);
 
 	// Noise simple fBm generator for hills
 	auto EnvironmentFractal = NoiseKernel.simplefBm(anl::BasisTypes::BASIS_SIMPLEX, anl::InterpolationTypes::INTERP_LINEAR, NoiseOctaves, NoiseFrequency, Seed);
 
-	// Scale and offset the noise values
 	auto EnvironmentScale = NoiseKernel.scaleOffset(EnvironmentFractal, NoiseScale, NoiseOffset);
-
-	// Turn fractal into heightmap by setting height to Zero
 	auto EnvironmentZScale = NoiseKernel.scaleZ(EnvironmentScale, Zero);
 
-	//Apply the Z offset from fractal to ground plane.
 	auto ApplyOffset = NoiseKernel.translateZ(VerticalSelect, EnvironmentZScale);
 
 	anl::CNoiseExecutor EnvironmentExecutor(NoiseKernel);

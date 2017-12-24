@@ -2,11 +2,46 @@
 
 #pragma once
 
+#include "ProceduralMeshComponent.h"
+#include "PolyVox/Vector.h"
 #include "PolyVox/PagedVolume.h"
 #include "PolyVox/MaterialDensityPair.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "VoxelEnvironment.generated.h"
+
+struct FPolyVoxVector : public FVector
+{
+	FORCEINLINE FPolyVoxVector()
+	{}
+
+	explicit FORCEINLINE FPolyVoxVector(EForceInit E) : FVector(E)
+	{}
+
+	FORCEINLINE FPolyVoxVector(float InX, float InY, float InZ) : FVector(InX, InY, InX)
+	{}
+
+	FORCEINLINE FPolyVoxVector(const FVector& VectorIn)
+	{
+		FVector::operator = (VectorIn);
+	}
+
+	FORCEINLINE FPolyVoxVector(const PolyVox::Vector3DFloat& VectorIn)
+	{
+		FPolyVoxVector::operator = (VectorIn);
+	}
+
+	FORCEINLINE FVector& operator = (const PolyVox::Vector3DFloat& Other)
+	{
+		this->X = Other.getX();
+		this->Y = Other.getY();
+		this->Z = Other.getZ();
+
+		DiagnosticCheckNaN();
+
+		return *this;
+	}
+};
 
 class VoxelEnvironmentPager : public PolyVox::PagedVolume<PolyVox::MaterialDensityPair44>::Pager
 {
@@ -54,6 +89,8 @@ public:
 	// Called after C++ constructor and after property initialization
 	virtual void PostInitializeComponents() override;
 
+	UPROPERTY(Category = "Voxel Environment", BlueprintReadWrite, VisibleAnywhere) class UProceduralMeshComponent* Mesh;
+	
 	// Fractal seed
 	UPROPERTY(Category = "Voxel Environment", BlueprintReadWrite, EditAnywhere) int32 Seed;
 

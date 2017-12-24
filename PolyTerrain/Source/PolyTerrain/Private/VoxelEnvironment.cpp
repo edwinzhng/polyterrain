@@ -2,6 +2,8 @@
 
 #include "VoxelEnvironment.h"
 #include "VM/kernel.h"
+#include "PolyVox/CubicSurfaceExtractor.h"
+#include "PolyVox/Mesh.h"
 
 using PolyVox::PagedVolume;
 using PolyVox::MaterialDensityPair44;
@@ -18,13 +20,53 @@ AVoxelEnvironment::AVoxelEnvironment()
 	NoiseScale = 32.f;
 	NoiseOffset = 0.f;
 	EnvironmentHeight = 64.f;
+
+	Mesh = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("Environment Mesh"));
 }
 
 // Called when the game starts or when spawned
 void AVoxelEnvironment::BeginPlay()
 {
-	Super::BeginPlay();
-	
+	PolyVox::Region ToExtract(PolyVox::Vector3DInt32(0, 0, 0), PolyVox::Vector3DInt32(127, 127, 63));
+	auto ExtractedMesh = PolyVox::extractCubicMesh(VoxelVolume.Get(), ToExtract);
+	auto DecodedMesh = PolyVox::decodeMesh(ExtractedMesh);
+
+	auto Vertices = TArray<FVector>();
+	auto Indices = TArray<int32>();
+	auto Normals = TArray<FVector>();
+	auto UV0 = TArray<FVector2D>();
+	auto Colors = TArray<FColor>();
+	auto Tangents = TArray<FProcMeshTangent>();
+
+	for (uint32 i = 0; i < DecodedMesh.getNoOfIndices() - 2; i += 3) 
+	{
+		// Get indices in reverse to ensure triangle is not upside down
+		auto Index = DecodedMesh.getIndex(i + 2);
+		auto Vertex2 = DecodedMesh.getVertex(Index);
+		Indices.Add(Vertices.Add(FPolyVoxVector(Vertex2.position) * 100.f));
+
+		Index = DecodedMesh.getIndex(i + 1);
+		auto Vertex1 = DecodedMesh.getVertex(Index);
+		Indices.Add(Vertices.Add(FPolyVoxVector(Vertex1.position) * 100.f));
+
+		Index = DecodedMesh.getIndex(i);
+		auto Vertex0 = DecodedMesh.getVertex(Index);
+		Indices.Add(Vertices.Add(FPolyVoxVector(Vertex0.position) * 100.f));
+
+		const FVector Edge1 = FPolyVoxVector(Vertex1.position - Vertex0.position);
+		const FVector Edge2 = FPolyVoxVector(Vertex2.position - Vertex0.position);
+
+		const FVector TangentX = Edge1.GetSafeNormal();
+		FVector TangentZ = (Edge1 ^ Edge2).GetSafeNormal();
+
+		for (int32 i = 0; i < 3; i++)
+		{
+			Tangents.Add(FProcMeshTangent(TangentX, false));
+			Normals.Add(TangentZ);
+		}
+	}
+
+	Mesh->CreateMeshSection(0, Vertices, Indices, Normals, UV0, Colors, Tangents, true);
 }
 
 // Called every frame

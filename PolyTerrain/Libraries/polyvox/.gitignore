@@ -1,0 +1,6 @@
+CMakeFiles/*
+CMakeCache.txt
+CPackConfig.cmake
+CPackSourceConfig.cmake
+DartConfiguration.tcl
+PolyVoxConfig.cmake
